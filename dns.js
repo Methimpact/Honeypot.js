@@ -108,7 +108,9 @@ function createServer(callback) {
 	}
 
 	return {
-		listen: socket.bind
+		listen: function(port, ip) {
+			socket.bind(port, ip);
+		}
 	}
 }
 
