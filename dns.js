@@ -1,4 +1,4 @@
- //========================================
+var dgram = require('dgram');
 
  // FIXME: kind of only supports 1 query
 function parseRequest(packet) {
