@@ -1,5 +1,4 @@
 var dns = require('./dns');
-var dgram = require('dgram');
 var http = require('http');
 
 // Globals
