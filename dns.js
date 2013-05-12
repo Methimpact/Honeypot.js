@@ -51,8 +51,8 @@ function parseQname(packet) {
 //========================================
 
 function createResponse(req, ip) {
-	var qlen = req._raw_queries.length();
-	var alen = 10 + ip.length; // FIXME: only supports 1 answer
+	var qlen = req._raw_queries.length;
+	var alen = 12 + ip.length; // FIXME: only supports 1 answer
 
 	var buffer_size = 12 + qlen + alen;
 
@@ -65,7 +65,7 @@ function createResponse(req, ip) {
 	res.writeUInt16BE(0, 8); // Total AuthorityRRs
 	res.writeUInt16BE(0, 10); // Total AdditionalRRs
 
-	req._raw_queries.copy(buffer, 12, 0);
+	req._raw_queries.copy(res, 12, 0);
 
 	// FIXME: only supports 1 answer
 	var offset = 12 + qlen;
@@ -73,9 +73,13 @@ function createResponse(req, ip) {
 	res.writeUInt16BE(1, offset + 2); // 0x0001, A-Name, 16bit
 	res.writeUInt16BE(1, offset + 4); // 0x0001, Class IN, 16bit
 	res.writeUInt32BE(60, offset + 6); // TTL of 60s, 32bit
-	res.writeUInt16BE(ip.length, offset + 10); // Data length
+
+	res.writeUInt16BE(ip.length, offset + 10); // Data length, 16bit
+	offset += 12;
+
 	ip.forEach(function(octet) {
-		res.writeUInt8(octet);
+		res.writeUInt8(octet, offset);
+		offset += 1;
 	});
 
 	return res;
