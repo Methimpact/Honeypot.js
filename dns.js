@@ -68,15 +68,14 @@ function createResponse(req, ip) {
 	req._raw_queries.copy(res, 12, 0);
 
 	// FIXME: only supports 1 answer
-	var offset = 12 + qlen;
-	res.writeUInt16BE(49164, offset); // ???, some form of shortcut to eliminate repeating the QName, 16bit
-	res.writeUInt16BE(1, offset + 2); // 0x0001, A-Name, 16bit
-	res.writeUInt16BE(1, offset + 4); // 0x0001, Class IN, 16bit
-	res.writeUInt32BE(60, offset + 6); // TTL of 60s, 32bit
+	res.writeUInt16BE(49164, 12 + qlen); // ???, some form of shortcut to eliminate repeating the QName, 16bit
+	res.writeUInt16BE(1, 14 + qlen); // 0x0001, A-Name, 16bit
+	res.writeUInt16BE(1, 16 + qlen); // 0x0001, Class IN, 16bit
+	res.writeUInt32BE(60, 18 + qlen); // TTL of 60s, 32bit
 
-	res.writeUInt16BE(ip.length, offset + 10); // Data length, 16bit
-	offset += 12;
+	res.writeUInt16BE(ip.length, 22 + qlen); // Data length, 16bit
 
+	var offset = 24 + qlen;
 	ip.forEach(function(octet) {
 		res.writeUInt8(octet, offset);
 		offset += 1;
