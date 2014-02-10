@@ -13,10 +13,7 @@ iptables-save > backup.rules
 
 echo "Opening up ports"
 iptables -A INPUT -p udp -m udp --dport 53 -j ACCEPT
-iptables -A OUTPUT -p udp -m udp --sport 53 -j ACCEPT
-
 iptables -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
-iptables -A OUTPUT -p tcp -m tcp --sport 80 -j ACCEPT
 
 echo "Starting DNS/HTTP server"
 node honeypot.js &
